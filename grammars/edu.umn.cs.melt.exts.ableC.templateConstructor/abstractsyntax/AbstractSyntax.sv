@@ -31,7 +31,7 @@ production bindTemplateConstructor implements TemplateConstructor
 top::Expr ::= targs::TemplateArgNames args::Exprs result::Expr
 {
   forwards to letExpr(
-    consDecl(bindExprsDecls(freshName("a"), @args), nilDecl()),
+    consDecl(bindExprsDecls(freshName("a"), @args), @targs.argDecls),
     @result);
 }
 

@@ -2,6 +2,7 @@ grammar edu:umn:cs:melt:exts:ableC:templateConstructor:abstractsyntax;
 
 imports silver:langutil;
 imports silver:langutil:pp;
+imports silver:rewrite as s;
 
 imports edu:umn:cs:melt:ableC:abstractsyntax:env;
 imports edu:umn:cs:melt:ableC:abstractsyntax:host;
@@ -30,6 +31,11 @@ dispatch TemplateConstructor = Expr ::= targs::TemplateArgNames args::Exprs;
 production bindTemplateConstructor implements TemplateConstructor
 top::Expr ::= targs::TemplateArgNames args::Exprs result::Expr
 {
+  top.pp = pp"bindTemplateConstructor<${ppImplode(pp", ", targs.pps)}>(${ppImplode(pp", ", args.pps)}) in ${result}";
+  targs.substEnv = s:fail();
+  -- This should not actually matter, for computing argDecls.
+  -- TODO: Is there a reason to properly supply the expected template arguments here?
+  targs.paramKinds = [];
   forwards to letExpr(
     consDecl(bindExprsDecls(freshName("a"), @args), @targs.argDecls),
     @result);

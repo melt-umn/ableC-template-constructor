@@ -37,7 +37,9 @@ top::Expr ::= targs::TemplateArgNames args::Exprs result::Expr
   -- TODO: Is there a reason to properly supply the expected template arguments here?
   targs.paramKinds = [];
   forwards to letExpr(
-    consDecl(bindExprsDecls(freshName("a"), @args), @targs.argDecls),
+    -- TODO: There is a missing equation in the prolog extension if the order is reversed here:
+    -- consDecl(bindExprsDecls(freshName("a"), @args), @targs.argDecls),
+    appendDecls(@targs.argDecls, consDecl(bindExprsDecls(freshName("a"), @args), nilDecl())),
     @result);
 }
 
